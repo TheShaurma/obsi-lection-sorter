@@ -1,6 +1,7 @@
 package lecsorter.config;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 import lecsorter.config.exceptions.InvalidPairsConfigException;
 
@@ -9,6 +10,14 @@ public interface PairsReader {
 
     void readPairs() throws IOException, InvalidPairsConfigException;
 
-    PairsManager getPairsManager();
+    Path getPathByName(String name);
+
+    String getNameByPath(String path);
+
+    String getNameByPath(Path path);
+
+    Iterable<String> getAllNames();
+
+    Iterable<Path> getAllPaths();
 
 }
