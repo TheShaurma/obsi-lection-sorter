@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import com.google.common.base.Joiner;
 
-import lecsorter.Constants;
 import lecsorter.config.exceptions.AbbreviationAlreadyExistException;
 import lecsorter.config.exceptions.DoubleAbbreviationException;
 import lecsorter.config.exceptions.DoublePathException;

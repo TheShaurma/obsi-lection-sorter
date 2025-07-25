@@ -1,4 +1,4 @@
-package lecsorter;
+package lecsorter.config;
 
 import java.io.File;
 
