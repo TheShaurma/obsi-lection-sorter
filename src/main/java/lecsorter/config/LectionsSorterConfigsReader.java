@@ -18,6 +18,7 @@ import lecsorter.config.exceptions.DoubleAbbreviationException;
 import lecsorter.config.exceptions.DoublePathException;
 import lecsorter.config.exceptions.InvalidAbbreviationsConfigException;
 import lecsorter.config.exceptions.InvalidConfigException;
+import lecsorter.config.exceptions.InvalidLectionsNamesConfigException;
 import lecsorter.config.exceptions.InvalidPairsConfigException;
 import lecsorter.config.exceptions.InvalidPathException;
 import lecsorter.config.exceptions.PairAlreadyExistException;
@@ -25,10 +26,12 @@ import lecsorter.config.exceptions.PairAlreadyExistException;
 // TODO: docs
 public class LectionsSorterConfigsReader implements ConfigsReader {
 
-    private AbbreviationsManager abbreviationsManager;
-    private PairsManager pairsManager;
+    protected AbbreviationsManager abbreviationsManager;
+    protected PairsManager pairsManager;
+    protected NamesFormatManager formatManager;
     private Path lectionsPath;
     private Path unsortedLectionsPath;
+    private Path backupsPath;
 
     private JSONObject jsonConfig;
 
@@ -42,6 +45,7 @@ public class LectionsSorterConfigsReader implements ConfigsReader {
         readAbbreviations();
         readPairs();
         readPaths();
+        readFormat();
     }
 
     @Override
@@ -90,8 +94,17 @@ public class LectionsSorterConfigsReader implements ConfigsReader {
 
     @Override
     public void readPaths() throws IOException, InvalidPathException {
-        lectionsPath = Paths.get(jsonConfig.getString(Constants.LECTIONS_PATH_JSON_KEY));
-        unsortedLectionsPath = Paths.get(jsonConfig.getString(Constants.UNSORTED_LECTIONS_PATH_JSON_KEY));
+        JSONObject jsonPaths = jsonConfig.getJSONObject(Constants.PATHS_JSON_KEY);
+
+        lectionsPath = Paths.get(jsonPaths.getString(Constants.LECTIONS_PATH_JSON_KEY));
+        unsortedLectionsPath = Paths.get(jsonPaths.getString(Constants.UNSORTED_LECTIONS_PATH_JSON_KEY));
+        backupsPath = Paths.get(jsonPaths.getString(Constants.BACKUPS_PATH_JSON_KEY));
+    }
+
+    @Override
+    public void readFormat() throws InvalidLectionsNamesConfigException {
+        formatManager = new LectionsSorterNamesFormatManager(jsonConfig
+                .getJSONObject(Constants.LECTIONS_NAMES_FORMAT_JSON_KEY));
     }
 
     @Override
@@ -105,7 +118,7 @@ public class LectionsSorterConfigsReader implements ConfigsReader {
     }
 
     @Override
-    public Path getPathByName(String name) {
+    public Path getPathBySubjectName(String name) {
         return getPairsManager().getPathByName(name);
     }
 
@@ -130,6 +143,51 @@ public class LectionsSorterConfigsReader implements ConfigsReader {
     }
 
     @Override
+    public Path getBackupsPath() {
+        return backupsPath;
+    }
+
+    @Override
+    public int getSeparatorIndex() {
+        return formatManager.getSeparatorIndex();
+    }
+
+    @Override
+    public String getSeparatorFormat() {
+        return formatManager.getSeparatorFormat();
+    }
+
+    @Override
+    public int getFirstYearIndex() {
+        return formatManager.getFirstYearIndex();
+    }
+
+    @Override
+    public int getLastYearIndex() {
+        return formatManager.getLastYearIndex();
+    }
+
+    @Override
+    public int getFirstMonthIndex() {
+        return formatManager.getFirstMonthIndex();
+    }
+
+    @Override
+    public int getLastMonthIndex() {
+        return formatManager.getLastMonthIndex();
+    }
+
+    @Override
+    public int getFirstDayIndex() {
+        return formatManager.getFirstDayIndex();
+    }
+
+    @Override
+    public int getLastDayIndex() {
+        return formatManager.getLastDayIndex();
+    }
+
+    @Override
     public Iterable<String> getAllFullNames() {
         return getAbbreviationsManager().getAllFullNames();
     }
@@ -145,7 +203,7 @@ public class LectionsSorterConfigsReader implements ConfigsReader {
     }
 
     @Override
-    public Iterable<Path> getAllPaths() {
+    public Iterable<Path> getAllAssignedLectionsPaths() {
         return getPairsManager().getAllPaths();
     }
 

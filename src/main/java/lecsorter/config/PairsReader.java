@@ -10,7 +10,7 @@ public interface PairsReader {
 
     void readPairs() throws IOException, InvalidPairsConfigException;
 
-    Path getPathByName(String name);
+    Path getPathBySubjectName(String name);
 
     String getNameByPath(String path);
 
@@ -18,6 +18,6 @@ public interface PairsReader {
 
     Iterable<String> getAllNames();
 
-    Iterable<Path> getAllPaths();
+    Iterable<Path> getAllAssignedLectionsPaths();
 
 }

@@ -14,4 +14,6 @@ public interface PathsReader {
 
     Path getUnsortedLectionsPath();
 
+    Path getBackupsPath();
+
 }

@@ -20,7 +20,11 @@ public class LectionsSorterAbbreviationsManager implements AbbreviationsManager 
 
     @Override
     public String getFullNameOf(String shortName) {
-        return shortFullMap.get(shortName);
+        if (fullShortMap.containsKey(shortName)) {
+            return shortName;
+        } else {
+            return shortFullMap.get(shortName);
+        }
     }
 
     @Override
