@@ -17,7 +17,7 @@ import lecsorter.config.exceptions.InvalidConfigException;
 // TODO: docs
 public class LectionsManager {
 
-    protected static ConfigsReader configsReader;
+    protected ConfigsReader configsReader;
 
     public LectionsManager() throws IOException, InvalidConfigException {
         configsReader = new LectionsSorterConfigsReader();
@@ -44,7 +44,7 @@ public class LectionsManager {
 
         // TODO: process only lection files
         for (File i : lectionsFiles) {
-            result.add(new LectionsSorterLection(i));
+            result.add(new LectionsSorterLection(i, configsReader));
         }
         return result;
     }
@@ -57,10 +57,8 @@ public class LectionsManager {
         private final Path subjectPath;
 
         // TODO: control is this a lection file or not
-        public LectionsSorterLection(File lectionFile) throws IOException, InvalidConfigException {
-            // FIXME: creating new config reader for every new object
-            // consequently reading all configs every time
-            ConfigsReader configsReader = LectionsManager.configsReader;
+        public LectionsSorterLection(File lectionFile, ConfigsReader configsReader)
+                throws IOException, InvalidConfigException {
             configsReader.readConfigs();
 
             String fileName = lectionFile.getName();
